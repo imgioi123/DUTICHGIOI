@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giphy Search</title>
+  <style>
+    #results {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    img {
+      margin: 10px;
+      max-width: 200px;
+      max-height: 200px;
+    }
+
+    button {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Giphy Search</h1>
+  <label for="search">Search:</label>
+  <input type="text" id="search" placeholder="Enter your search term">
+  <button onclick="searchGif()">Search</button>
+  <button onclick="clearResults()">Clear Results</button>
+  <div id="results"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    const apiKey = 'YOUR_API_KEY'; // Thay YOUR_API_KEY bằng API Key của bạn
+
+    function searchGif() {
+      const searchTerm = document.getElementById('search').value;
+      const url = `http://api.giphy.com/v1/gifs/search?q=${searchTerm}&api_key=${apiKey}`;
+
+      axios.get(url)
+        .then(response => {
+          displayResults(response.data.data);
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
+    }
+
+    function displayResults(data) {
+      const resultsContainer = document.getElementById('results');
+      resultsContainer.innerHTML = '';
+
+      data.forEach(gif => {
+        const img = document.createElement('img');
+        img.src = gif.images.fixed_height.url;
+        resultsContainer.appendChild(img);
+      });
+    }
+
+    function clearResults() {
+      const resultsContainer = document.getElementById('results');
+      resultsContainer.innerHTML = '';
+    }
+  </script>
+</body>
+</html>
